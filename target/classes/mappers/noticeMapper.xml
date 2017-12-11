@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="noticeMapper">	<!-- 파일 이름과 동일한 이름으로 맞추기 -->
+  
+  	<sql id="test">
+  		where title like '%'||#{search}||'%'
+  	</sql>
+  
+  	<select id="selectList" parameterType="com.iu.util.RowNum" resultType="com.iu.board.BoardDTO">
+  		select * from
+  		(select rownum r, N.* from
+  		(select * from notice
+		<if test="kind == 'title'">
+			where title like '%'||#{search}||'%'
+		</if>
+		<if test="kind == 'writer'">
+			where writer like '%'||#{search}||'%'
+		</if>
+		<if test="kind == 'contents'">
+			where contents like '%'||#{search}||'%'
+		</if>
+		order by num desc) N)
+  		where r between #{startRow} and #{lastRow}
+  	</select>
+  	<!-- resultType이 List일 경우, generic의 형식만 명시해 줄 경우 알아서 List 형태로 반환해 줌 -->
+  	<!-- map을 사용할 때, map의 key 값을 넣어주면 알아서 사용함 -->
+  	<!-- list를 사용할 경우, ${인덱스번호}를 쓰면 되나, 추천 안함 -->
+  	
+  	<select id="selectOne" parameterType="java.lang.Integer" resultType="com.iu.board.BoardDTO">
+  		select * from notice where num=#{num}
+  	</select>
+  	<!-- primative Type은 그냥 int로 써도 됨 -->
+  	<!-- reference Type은 그냥 NoticeDTO르 쓰면 못찾으므로 풀패키지 명으로 써야함 -->
+  	
+  	<insert id="insert" parameterType="com.iu.board.BoardDTO">
+  		insert into notice 
+  		values(board_seq.nextval,#{writer},#{title},#{contents},sysdate,0)
+  	</insert>
+  	<!-- insert / delete / update는 결과값이 모두 int이므로 resultType을 명시하지 않음 -->
+  	
+  	<delete id="delete" parameterType="int">
+  		delete notice where num=#{num}
+  	</delete>
+  	
+  	<update id="update" parameterType="com.iu.board.BoardDTO">
+  		update notice set
+  		title=#{title}, contents=#{contents}
+  		where num=#{num}
+  	</update>
+  	
+  	<select id="totalCount" parameterType="com.iu.util.RowNum" resultType="int">
+  		select count(*) from notice
+  		<if test="kind == 'title'">
+  			<include refid="test"></include>  	<!-- 자주 쓰는 중복되는 sql문을 따로 분리해서 저장한 뒤 불러와서 사용 -->	
+  		</if>
+  		<if test="kind == 'writer'">
+  			where writer like '%'||#{search}||'%'
+  		</if>
+  		<if test="kind == 'contents'">
+  			where contents like '%'||#{search}||'%'
+  		</if>
+  		<!-- select nvl(count(num),0) from notice -->
+  	</select>
+  	
+  	<select id="getNum" resultType="int">
+  		select board_seq.nextval from dual
+  	</select>
+  	
+  	<update id="hitUpdate" parameterType="int">
+  		update notice set hit=hit+1 where num=#{num}
+  	</update>
+  </mapper>
