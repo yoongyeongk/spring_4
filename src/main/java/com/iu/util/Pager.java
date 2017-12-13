@@ -1,5 +1,7 @@
 package com.iu.util;
 
+import org.springframework.stereotype.Component;
+
 public class Pager {
 	private int startNum;
 	private int lastNum;

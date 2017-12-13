@@ -19,6 +19,19 @@ public class QnaDAOTest extends AbstractTest {
 	@Inject
 	QnaDAO qnaDAO;
 	
+	public void reply() throws Exception{
+		QnaDTO qnaDTO = new QnaDTO();
+		qnaDTO.setTitle("test2");
+		qnaDTO.setWriter("test");
+		qnaDTO.setContents("testContents");
+		qnaDTO.setRef(460);
+		qnaDTO.setStep(0);
+		qnaDTO.setDepth(0);
+		qnaDAO.stepUpdate(qnaDTO);
+		int result = qnaDAO.reply(qnaDTO);
+		assertEquals(result, 1);
+	}
+	
 	public void getNum() throws Exception{
 		int result = qnaDAO.getNum();
 		System.out.println(result);
@@ -83,7 +96,7 @@ public class QnaDAOTest extends AbstractTest {
 	@Test
 	public void test() {
 		try {
-			this.getNum();
+			this.reply();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -35,6 +35,11 @@ public class NoticeDAOTest extends AbstractTest {
 		System.out.println(result);
 	}
 	
+	public void selectOne() throws Exception{
+		NoticeDTO noticeDTO = noticeDAO.selectOne(485);
+		System.out.println(noticeDTO.getContents());
+	}
+	
 	public void selectList() throws Exception{
 		RowNum rowNum = new RowNum();
 		rowNum.setStartRow(1);
@@ -51,13 +56,13 @@ public class NoticeDAOTest extends AbstractTest {
 	}
 	
 	public void insert(){
-		NoticeDTO noticeDTO = new NoticeDTO();
+		BoardDTO noticeDTO = new NoticeDTO();
 		noticeDTO.setTitle("iu_test");
+		noticeDTO.setWriter("iu");
 		noticeDTO.setContents("iu_content");
-		noticeDTO.setNum(485);
 		int result = 0;
 		try {
-			result = noticeDAO.update(noticeDTO);
+			result = noticeDAO.insert(noticeDTO);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -76,7 +81,7 @@ public class NoticeDAOTest extends AbstractTest {
 	@Test
 	public void test() {
 		try {
-			this.getTotalCount();
+			this.insert();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

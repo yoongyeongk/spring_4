@@ -18,6 +18,14 @@ public class QnaDAO implements BoardDAO {
 	private SqlSession sqlSession;
 	private static final String namespace = "qnaMapper.";
 	
+	public int stepUpdate(QnaDTO qnaDTO) throws Exception {
+		return sqlSession.update(namespace+"stepUpdate", qnaDTO);
+	}
+	
+	public int reply(QnaDTO qnaDTO) throws Exception {
+		return sqlSession.insert(namespace+"reply", qnaDTO);
+	}
+	
 	@Override
 	public List<BoardDTO> selectList(RowNum rowNum) throws Exception {
 		return sqlSession.selectList(namespace+"selectList", rowNum);
@@ -57,5 +65,4 @@ public class QnaDAO implements BoardDAO {
 	public int getNum() throws Exception {
 		return sqlSession.selectOne(namespace+"getNum");
 	}
-
 }

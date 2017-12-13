@@ -8,23 +8,56 @@
   	like '%'||#{search}||'%'
   </sql>
   
-  <select id="selectOne" parameterType="int" resultType="com.iu.board.BoardDTO">
-  	select * from qna where num=#{num}
+  <resultMap type="QnaDTO" id="qnaResult">
+  	<id property="num" column="num"/>
+  	<result property="title" column="title"/>
+  	<result property="writer" column="writer"/>
+  	<result property="contents" column="contents"/>
+  	<result property="reg_date" column="reg_date"/>
+  	<result property="hit" column="hit"/>
+  	<result property="ref" column="ref"/>
+  	<result property="step" column="step"/>
+  	<result property="depth" column="depth"/>
+  	<collection property="fileNames" javaType="ArrayList" ofType="FileDTO">
+  		<id property="fnum" column="fnum"/>
+  		<result property="num" column="num"/>
+  		<result property="filename" column="filename"/>
+  		<result property="oriname" column="oriname"/>
+  	</collection>
+  	
+  </resultMap>
+  
+  <update id="stepUpdate" parameterType="QnaDTO" >
+  	<![CDATA[
+  	update qna set step=step+1 where ref=#{ref} and step>#{step}
+  	]]>
+  </update>
+  
+  <insert id="reply" parameterType="QnaDTO">
+  	insert into qna 
+  	values(board_seq.nextval,#{title},#{writer},#{contents},sysdate,0,
+  	#{ref},#{step}+1,#{depth}+1)
+  </insert>
+  
+  <select id="selectOne" parameterType="int" resultMap="qnaResult">
+  	select qna.*, upload.* from qna, upload 
+  	where qna.num=#{num} and qna.num=upload.num
+  	order by ref desc, step asc
   </select>
   
   <select id="selectList" parameterType="com.iu.util.RowNum" resultType="com.iu.board.BoardDTO">
   	select * from
   	(select rownum r, N.* from
   	(select * from qna 
-  	<if test="kind == 'title'">
+  	<if test="kind == 'Title'">
   		where title
   		<include refid="kind"></include>
   	</if>
-  	<if test="kind == 'writer'">
+  	<if test="kind == 'Writer'">
   		where writer
   		<include refid="kind"></include>
   	</if>
-  	<if test="kind == 'contents'">
+  	<if test="kind == 'Contents'">
   		where contents
   		<include refid="kind"></include>
   	</if>
@@ -33,8 +66,11 @@
   </select>
   
   <insert id="insert" parameterType="com.iu.board.BoardDTO">
+  	<selectKey keyProperty="num" resultType="int" order="BEFORE">
+  		select board_seq.nextval from dual
+  	</selectKey>
   	insert into qna
-  	values(board_seq.nextval,#{title},#{writer},#{contents},sysdate,0,board_seq.currval,0,0)
+  	values(#{num},#{title},#{writer},#{contents},sysdate,0,#{num},0,0)
   </insert>
   
   <update id="update" parameterType="com.iu.board.BoardDTO">

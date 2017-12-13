@@ -8,17 +8,36 @@
   		where title like '%'||#{search}||'%'
   	</sql>
   
+  	<resultMap type="NoticeDTO" id="noticeResult">
+  		<id property="num" column="num"/>
+  		<result property="writer" column="writer"/>
+  		<result property="title" column="title"/>
+  		<result property="contents" column="contents"/>
+  		<result property="reg_date" column="reg_date"/>
+  		<result property="hit" column="hit"/>
+  		<collection property="fileNames" javaType="ArrayList" ofType="FileDTO">
+  			<id property="fnum" column="fnum"/>
+	  		<result property="num" column="num"/>
+	  		<result property="filename" column="filename"/>
+	  		<result property="oriname" column="oriname"/>
+  		</collection>
+  	</resultMap>
+  
+  	<select id="selectOne" parameterType="int" resultMap="noticeResult">
+  		select * from notice where num=#{num}
+  	</select>
+  
   	<select id="selectList" parameterType="com.iu.util.RowNum" resultType="com.iu.board.BoardDTO">
   		select * from
   		(select rownum r, N.* from
   		(select * from notice
-		<if test="kind == 'title'">
+		<if test="kind == 'Title'">
 			where title like '%'||#{search}||'%'
 		</if>
-		<if test="kind == 'writer'">
+		<if test="kind == 'Writer'">
 			where writer like '%'||#{search}||'%'
 		</if>
-		<if test="kind == 'contents'">
+		<if test="kind == 'Contents'">
 			where contents like '%'||#{search}||'%'
 		</if>
 		order by num desc) N)
@@ -28,15 +47,18 @@
   	<!-- map을 사용할 때, map의 key 값을 넣어주면 알아서 사용함 -->
   	<!-- list를 사용할 경우, ${인덱스번호}를 쓰면 되나, 추천 안함 -->
   	
-  	<select id="selectOne" parameterType="java.lang.Integer" resultType="com.iu.board.BoardDTO">
+  	<!-- <select id="selectOne" parameterType="java.lang.Integer" resultType="NoticeDTO">
   		select * from notice where num=#{num}
-  	</select>
+  	</select> -->
   	<!-- primative Type은 그냥 int로 써도 됨 -->
   	<!-- reference Type은 그냥 NoticeDTO르 쓰면 못찾으므로 풀패키지 명으로 써야함 -->
   	
   	<insert id="insert" parameterType="com.iu.board.BoardDTO">
+  		<selectKey keyProperty="num" resultType="int" order="BEFORE">
+  			select board_seq.nextval from dual
+  		</selectKey>
   		insert into notice 
-  		values(board_seq.nextval,#{writer},#{title},#{contents},sysdate,0)
+  		values(#{num},#{writer},#{title},#{contents},sysdate,0)
   	</insert>
   	<!-- insert / delete / update는 결과값이 모두 int이므로 resultType을 명시하지 않음 -->
   	
