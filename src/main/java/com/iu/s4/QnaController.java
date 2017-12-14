@@ -144,10 +144,10 @@ public class QnaController {
 	}
 	
 	@RequestMapping(value="qnaReply", method=RequestMethod.POST)
-	public String reply(QnaDTO qnaDTO, RedirectAttributes rd){
+	public String reply(QnaDTO qnaDTO, RedirectAttributes rd, HttpSession session){
 		int result = 0;
 		try {
-			result = qnaService.reply(qnaDTO);
+			result = qnaService.reply(qnaDTO, session);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

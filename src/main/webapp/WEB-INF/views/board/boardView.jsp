@@ -45,7 +45,7 @@ td{
 	</table>
 	
 	<c:forEach items="${view.fileNames}" var="file">
-		<a href="../util/download?filename=${file.filename}&oriname=${file.oriname}">${file.oriname}</a>
+		<a href="../file/fileDown?filename=${file.filename}&oriname=${file.oriname}">${file.oriname}</a>
 	</c:forEach>
 	<c:if test="${board eq 'qna'}">
 		<a href="./qnaReply?num=${view.num}">reply</a>		

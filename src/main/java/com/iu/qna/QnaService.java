@@ -78,11 +78,19 @@ public class QnaService implements BoardService{
 		return result;
 	}
 	
-	public int reply(QnaDTO qnaDTO) throws Exception {
-		System.out.println("들어옴");
+	public int reply(QnaDTO qnaDTO, HttpSession session) throws Exception {
 		int result = qnaDAO.reply(qnaDTO);
-		System.out.println("result"+result);
 		qnaDAO.stepUpdate(qnaDTO);
+		if(qnaDTO.getFiles().length != 0){
+			for(MultipartFile multipartFile: qnaDTO.getFiles()){
+				FileDTO fileDTO = new FileDTO();
+				String filename = fileSaver.fileSave(multipartFile, session, "upload");
+				fileDTO.setFilename(filename);
+				fileDTO.setOriname(multipartFile.getOriginalFilename());
+				fileDTO.setNum(qnaDTO.getNum());
+				fileDAO.insert(fileDTO);
+			}
+		}
 		return result;
 	}
 

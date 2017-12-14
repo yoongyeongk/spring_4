@@ -2,18 +2,44 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+	
+<!-- 	<bean class="com.iu.aop.Transport" id="transport"></bean>
+	<bean class="com.iu.aop.CardCheck" id="cardCheck"></bean>
+	<bean class="com.iu.aop.Trip" id="trip"></bean>
+	<bean class="com.iu.aop.MoneyChange" id="moneyChange"></bean>
+	
+	<aop:config>
+		<aop:aspect id="cardAspect" ref="cardCheck">
+			<aop:pointcut expression="execution(* com.iu.aop..Transport.*())" id="trans"/>
+			<aop:before method="check" pointcut-ref="trans"/>
+		</aop:aspect>
+		..: 매개변수가 0개 이상인 모든 메서드
+		*(): 매개변수가 없는 모든 메서드들
+	
+		<aop:aspect id="moneyAspect" ref="moneyChange">
+		<aop:pointcut expression="execution(* com.iu.aop..Trip.*(..))" id="tri"/>
+		<aop:around method="exchange" pointcut-ref="tri"/>
+		</aop:aspect>
+	</aop:config> -->
+	
+	
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<context:component-scan base-package="com.iu.notice"></context:component-scan>
 	<context:component-scan base-package="com.iu.qna"></context:component-scan>
 	<context:component-scan base-package="com.iu.file"></context:component-scan>
+	<context:component-scan base-package="com.iu.aop"></context:component-scan>
 
+	
 	<bean class="com.iu.util.FileSaver" id="fileSaver" />
 
 	<bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver">
 		<property name="defaultEncoding" value="UTF-8"></property>
 		<property name="maxUploadSize" value="10485760"></property>
 	</bean>
+	
 </beans>

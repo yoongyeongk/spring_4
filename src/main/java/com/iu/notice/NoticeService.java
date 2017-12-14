@@ -48,10 +48,10 @@ public class NoticeService implements BoardService{
 	public BoardDTO selectOne(int num) throws Exception {
 		noticeDAO.hitUpdate(num);
 		BoardDTO boardDTO = noticeDAO.selectOne(num);
-		List<FileDTO> fileNames = fileDAO.selectList(num);
+		/*List<FileDTO> fileNames = fileDAO.selectList(num);
 		if(fileNames.size() != 0){
 			((NoticeDTO)boardDTO).setFileNames(fileNames);
-		}
+		}*/
 		
 		return boardDTO;
 	}

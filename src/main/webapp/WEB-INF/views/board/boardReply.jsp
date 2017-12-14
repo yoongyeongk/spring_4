@@ -53,6 +53,10 @@ input{
 <script type="text/javascript" src="../resources/SE2/js/HuskyEZCreator.js"></script>
 <script type="text/javascript">
 	$(function(){
+		
+	alert('${view.ref}');
+	alert('${view.step}');
+	alert('${view.depth}');
 		//SmartEditor start
 		//전역변수선언
     var editor_object = [];
@@ -126,7 +130,7 @@ input{
 <body>
 	<h1>${board} Write Form</h1>
 	
-	<form action="qnaReply" method="post" id="frm">
+	<form action="qnaReply" method="post" id="frm" enctype="multipart/form-data">
 		<input type="hidden" name="ref" value="${view.ref}">
 		<input type="hidden" name="step" value="${view.step}">
 		<input type="hidden" name="depth" value="${view.depth}">
@@ -148,7 +152,7 @@ input{
 			</div>
 		</div>
 		<div class="fileSec" id="fileAdd"></div>
-	<!-- <div id="files"></div> -->
+	<div id="files"></div>
 	
 	<input type="button" id="savebutton" value="write">
 	</form>
