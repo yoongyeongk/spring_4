@@ -11,14 +11,17 @@
 	$(function(){
 		$("#btn").on("click", function(){
 			$.get("../ajax/memberList", function(data){
-				$("#result").html(data);
+				$(data).each(function(){
+					alert(this.id);
+				})
 			})
 		})
 		
 		$("#id").blur(function(){
 			var id = $(this).val();
-			$.post("../ajax/checkId",{id: id}, function(data){
-				alert(data);				
+			$.get("../ajax/checkId", function(data){
+				alert(data.id);	
+				alert(data.name);
 			});
 		});
 	});

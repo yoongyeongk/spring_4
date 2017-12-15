@@ -4,7 +4,6 @@
 	<table>
 		<tr>
 			<td>ID</td>
-			<td>PW</td>
 			<td>Name</td>
 			<td>Phone</td>
 			<td>Email</td>
@@ -12,7 +11,6 @@
 		<c:forEach items="${list}" var="dto">
 		<tr>
 			<td>${dto.id}</td>
-			<td>${dto.pw}</td>
 			<td>${dto.name}</td>
 			<td>${dto.phone}</td>
 			<td>${dto.email}</td>
