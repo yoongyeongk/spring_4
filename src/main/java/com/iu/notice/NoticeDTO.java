@@ -1,7 +1,10 @@
 package com.iu.notice;
 
-import com.iu.board.BoardDTO;
+import org.springframework.web.multipart.MultipartFile;
 
-public class NoticeDTO extends BoardDTO{
+import com.iu.board.BoardDTO;
+import com.iu.board.BoardFileDTO;
+
+public class NoticeDTO extends BoardFileDTO{
 
 }

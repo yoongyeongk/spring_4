@@ -1,7 +1,5 @@
 package com.iu.notice;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,9 +25,14 @@ public class NoticeDAO implements BoardDAO{
 		return sqlSession.selectList(namespace+"selectList", rowNum); 
 	}
 
+	public int insertMemo(Map<String, Object> map) throws Exception {
+		return sqlSession.insert(namespace+"memoInsert", map);
+	}
+	
 	@Override
 	public int insert(BoardDTO boardDTO) throws Exception {
-		return sqlSession.insert(namespace+"insert", boardDTO);
+		int result = sqlSession.insert(namespace+"insert", boardDTO);
+		return result;
 	}
 
 	@Override

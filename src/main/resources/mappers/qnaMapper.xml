@@ -7,24 +7,55 @@
   <sql id="kind">
   	like '%'||#{search}||'%'
   </sql>
+ 
+  <resultMap type="QnaDTO" id="qnaResult">
+ 	<id property="num" column="num"/>
+ 	<collection property="fileNames" column="num" ofType="FileDTO" select="selectFile">
+ 		<id property="fnum" column="fnum"/>
+ 	<!-- 업로드 테이블에서 데이터를 불러오는 쿼리문의 아이디를 적기 -->
+ 	<!-- 그럼 그 쿼리문을 다시 실행해서 컬렉션으로 가져오게 됨 -->
+ 	<!-- collection일 경우에는 아이디 제외하고 변수들을 생략해도 됨 -->
+ 	<!-- 이렇게 처리할 시에 파일이 없더라도 에러가 뜨지 않음 -->
+ 	</collection>
+  </resultMap>
+ 
   
-  <select id="selectOne" parameterType="int" resultType="com.iu.board.BoardDTO">
+  <update id="stepUpdate" parameterType="QnaDTO" >
+  	<![CDATA[
+  	update qna set step=step+1 where ref=#{ref} and step>#{step}
+  	]]>
+  </update>
+  
+  <insert id="reply" parameterType="QnaDTO">
+  <selectKey keyProperty="num" resultType="int" order="BEFORE">
+  	select board_seq.nextval from dual
+  </selectKey>
+  	insert into qna 
+  	values(#{num},#{title},#{writer},#{contents},sysdate,0,
+  	#{ref},#{step}+1,#{depth}+1)
+  </insert>
+  
+  <select id="selectOne" parameterType="int" resultMap="qnaResult">
   	select * from qna where num=#{num}
   </select>
   
-  <select id="selectList" parameterType="com.iu.util.RowNum" resultType="com.iu.board.BoardDTO">
+  <select id="selectFile" parameterType="int" resultType="FileDTO">
+  	select * from upload where num=#{num}
+  </select>
+  
+  <select id="selectList" parameterType="com.iu.util.RowNum" resultType="QnaDTO">
   	select * from
   	(select rownum r, N.* from
   	(select * from qna 
-  	<if test="kind == 'title'">
+  	<if test="kind == 'Title'">
   		where title
   		<include refid="kind"></include>
   	</if>
-  	<if test="kind == 'writer'">
+  	<if test="kind == 'Writer'">
   		where writer
   		<include refid="kind"></include>
   	</if>
-  	<if test="kind == 'contents'">
+  	<if test="kind == 'Contents'">
   		where contents
   		<include refid="kind"></include>
   	</if>
@@ -33,8 +64,11 @@
   </select>
   
   <insert id="insert" parameterType="com.iu.board.BoardDTO">
+  	<selectKey keyProperty="num" resultType="int" order="BEFORE">
+  		select board_seq.nextval from dual
+  	</selectKey>
   	insert into qna
-  	values(board_seq.nextval,#{title},#{writer},#{contents},sysdate,0,board_seq.currval,0,0)
+  	values(#{num},#{title},#{writer},#{contents},sysdate,0,#{num},0,0)
   </insert>
   
   <update id="update" parameterType="com.iu.board.BoardDTO">
