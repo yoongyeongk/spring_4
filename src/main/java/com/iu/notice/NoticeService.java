@@ -1,12 +1,15 @@
 package com.iu.notice;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -56,12 +59,14 @@ public class NoticeService implements BoardService{
 		return boardDTO;
 	}
 
+	@Transactional
 	@Override
 	public int insert(BoardDTO boardDTO, HttpSession session) throws Exception {
 		MultipartFile [] files = ((NoticeDTO)boardDTO).getFiles();
 		int result = noticeDAO.insert(boardDTO);
-		
-		if(((NoticeDTO)boardDTO).getFiles().length != 0){
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		if(((NoticeDTO)boardDTO).getFiles() == null){
 			FileDTO fileDTO = null;
 			for(MultipartFile multipartFile: files){
 				String fileName = fileSaver.fileSave(multipartFile, session, "upload");

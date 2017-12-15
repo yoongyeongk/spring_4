@@ -49,6 +49,10 @@
   	<!-- primative Type은 그냥 int로 써도 됨 -->
   	<!-- reference Type은 그냥 NoticeDTO르 쓰면 못찾으므로 풀패키지 명으로 써야함 -->
   	
+  	<insert id="memoInsert" parameterType="java.util.Map">
+  		insert into memo values(#{num},#{title},#{contents},sysdate)
+  	</insert>
+  	
   	<insert id="insert" parameterType="com.iu.board.BoardDTO">
   		<selectKey keyProperty="num" resultType="int" order="BEFORE">
   			select board_seq.nextval from dual

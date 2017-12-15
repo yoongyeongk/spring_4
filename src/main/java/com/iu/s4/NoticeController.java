@@ -25,27 +25,20 @@ public class NoticeController {
 	
 	//selectList
 	@RequestMapping(value="noticeList")
-	public ModelAndView selectList(ModelAndView mv, ListData listData){
-		try {
+	public ModelAndView selectList(ModelAndView mv, ListData listData) throws Exception{
 			mv = noticeService.selectList(listData);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+			
+			if(mv != null){
+				throw new NullPointerException();	//exception을 강제로 발생시키는 것
+			}
+			
 		return mv;
 	}
 			
 	//selectOne
 	@RequestMapping(value="noticeView")
-	public ModelAndView selectOne(ModelAndView mv, int num, RedirectAttributes rd){
-		BoardDTO boardDTO = null;
-		try {
-			boardDTO = noticeService.selectOne(num);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public ModelAndView selectOne(ModelAndView mv, int num, RedirectAttributes rd) throws Exception{
+		BoardDTO boardDTO = noticeService.selectOne(num);
 		
 		if(boardDTO != null){
 			mv.addObject("view", boardDTO);
@@ -61,22 +54,16 @@ public class NoticeController {
 	
 	//insert --> form 이동
 	@RequestMapping(value="noticeWrite",method=RequestMethod.GET)
-	public String insert(Model model){
+	public String insert(Model model) throws Exception {
 		model.addAttribute("board", "notice");
 		return "board/boardWrite";
 	}
 	
 	//insert --> DB 처리
 	@RequestMapping(value="noticeWrite",method=RequestMethod.POST)
-	public String insert(RedirectAttributes rd, NoticeDTO noticeDTO, HttpSession session){
-		int result = 0;
+	public String insert(RedirectAttributes rd, NoticeDTO noticeDTO, HttpSession session) throws Exception {
+		int result = noticeService.insert(noticeDTO, session);
 		
-		try {
-			result = noticeService.insert(noticeDTO, session);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		String message = "등록 실패";
 		if(result>0){
 			message = "등록 성공";
@@ -88,14 +75,9 @@ public class NoticeController {
 	
 	//update --> form 이동
 	@RequestMapping(value="noticeUpdate",method=RequestMethod.GET)
-	public String update(Model model, int num){
-		BoardDTO boardDTO = null;
-		try {
-			boardDTO = noticeService.selectOne(num);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public String update(Model model, int num) throws Exception {
+		BoardDTO boardDTO = noticeService.selectOne(num);
+
 		model.addAttribute("view", boardDTO);
 		model.addAttribute("board", "notice");
 		return "board/boardUpdate";
@@ -103,14 +85,9 @@ public class NoticeController {
 	
 	//update --> DB 처리
 	@RequestMapping(value="noticeUpdate",method=RequestMethod.POST)
-	public String update(BoardDTO boardDTO, RedirectAttributes rd){
-		int result = 0;
-		try {
-			result = noticeService.update(boardDTO);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public String update(BoardDTO boardDTO, RedirectAttributes rd) throws Exception {
+		int result = noticeService.update(boardDTO);
+	
 		String message = "업데이트 실패";
 		if(result>0){
 			message = "업데이트 성공";
@@ -122,14 +99,9 @@ public class NoticeController {
 	
 	//delete
 	@RequestMapping(value="noticeDelete")
-	public String delete(int num, RedirectAttributes rd){
-		int result = 0;
-		try {
-			result = noticeService.delete(num);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public String delete(int num, RedirectAttributes rd) throws Exception {
+		int result = noticeService.delete(num);
+
 		String message = "삭제 실패";
 		if(result>0){
 			message = "삭제 성공";

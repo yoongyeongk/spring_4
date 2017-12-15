@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class MoneyChange {
 	
-	@Around("excution( * com.iu.aop..Trip.*(..))")
+	@Around("execution( * com.iu.aop..Trip.*(..))")
 	public Object exchange(ProceedingJoinPoint join){
 		System.out.println("-------------");
 		System.out.println("원화를 루블로 교환");

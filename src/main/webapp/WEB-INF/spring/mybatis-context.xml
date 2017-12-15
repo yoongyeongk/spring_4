@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
 <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" id="propertyPlaceholderConfigurer">
 	<property name="location" value="classpath:/mybatis/db.properties" />
@@ -23,5 +27,26 @@
 <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
 	<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
 </bean>
+
+<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<property name="dataSource" ref="dataSource"></property>
+</bean>
+	
+<!-- rollback을 실행해주는 aspect라고 할 수 있음 
+<tx:advice id="txAdvice" transaction-manager="transactionManager">
+	<tx:attributes>
+		<tx:method name="*" rollback-for="RuntimeException"/>
+	</tx:attributes>
+</tx:advice>
+
+aspect를 사용할 지점(pointcut) 설정
+<aop:config proxy-target-class="true">	aop 사용 시 proxty를 사용하여 프록시를 거쳐 객체를 사용할 수 있음
+	<aop:pointcut expression="execution(* com.iu.notice..*(..))" id="requireTx"/>
+	<aop:advisor advice-ref="txAdvice" pointcut-ref="requireTx"/>
+	advisor의 결정에 따라 사용할 지 말지 결정한다는 의미
+</aop:config> -->
+
+<!-- 트랜잭션에 관련된 annotation을 읽어주는 역할 -->
+<tx:annotation-driven proxy-target-class="true"/>
 
 </beans>
